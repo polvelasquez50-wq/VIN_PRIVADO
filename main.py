@@ -290,117 +290,79 @@ def verificar(
 
     vin = vin.upper().strip()
 
-   if len(vin) != 17:
-    return f"""
-    {BASE_STYLE}
-    <div class="container">
-        <h1>Resultado</h1>
-        <p><b>Error:</b> VIN inválido (debe tener 17 caracteres)</p>
-        <a href="/vin">Intentar otro</a>
-    </div>
-    """
+    if len(vin) != 17:
+        return f"""
+{BASE_STYLE}
+<div class="container">
+    <h1>Resultado</h1>
+    <p><b>Error:</b> VIN inválido (debe tener 17 caracteres)</p>
+    <a href="/vin">Intentar otro</a>
+</div>
+"""
+
     pais, fabricante, anio = procesar_vin(vin)
     estado, detalle = validar_vin_matematico(vin)
 
     guardar_en_sheets(vin, pais, fabricante, anio, estado)
 
-    # -------------------------
-    # PROCESAMIENTO DE IMAGEN
-    # -------------------------
-
-    imagen_html = ""
-
     if imagen and imagen.filename != "":
         contenido = imagen.file.read()
-
         import base64
         imagen_base64 = base64.b64encode(contenido).decode("utf-8")
 
         imagen_html = f"""
-        <div class="box">
-            <h2>Imagen del vehículo</h2>
-
-            <div style="
-                width:100%;
-                height:220px;
-                border:2px dashed #334155;
-                border-radius:12px;
-                overflow:hidden;
-            ">
-                <img src="data:image/jpeg;base64,{imagen_base64}"
-                     style="width:100%; height:100%; object-fit:cover;">
-            </div>
-
-        </div>
-        """
-
+<div class="box">
+    <h2>Imagen del vehículo</h2>
+    <div style="width:100%; height:220px; border:2px dashed #334155; border-radius:12px; overflow:hidden;">
+        <img src="data:image/jpeg;base64,{imagen_base64}" style="width:100%; height:100%; object-fit:cover;">
+    </div>
+</div>
+"""
     else:
-
         imagen_html = """
-        <div class="box">
-            <h2>Imagen del vehículo</h2>
-
-            <div style="
-                width:100%;
-                height:220px;
-                border:2px dashed #334155;
-                border-radius:12px;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-            ">
-
-                <div style="
-                    transform:rotate(-20deg);
-                    font-size:28px;
-                    color:#475569;
-                    font-weight:bold;
-                ">
-                    NO DATA
-                </div>
-
-            </div>
-
+<div class="box">
+    <h2>Imagen del vehículo</h2>
+    <div style="width:100%; height:220px; border:2px dashed #334155; border-radius:12px; display:flex; align-items:center; justify-content:center;">
+        <div style="transform:rotate(-20deg); font-size:28px; color:#475569; font-weight:bold;">
+            NO DATA
         </div>
-        """
-
-    # -------------------------
-    # RETORNO FINAL
-    # -------------------------
+    </div>
+</div>
+"""
 
     return f"""
-    {BASE_STYLE}
-    <div class="container">
-        <h1>Resultado VIN</h1>
+{BASE_STYLE}
+<div class="container">
+    <h1>Resultado VIN</h1>
 
-        <div class="box">
-            <h2>VELPOL – Verificador de VIN</h2>
-            <p><b>VIN:</b> {vin}</p>
-            <p><b>País de origen:</b> {pais}</p>
-            <p><b>Fabricante:</b> {fabricante}</p>
-            <p><b>Año de fabricación:</b> {anio}</p>
-        </div>
-
-        <div class="box">
-            <h2>VELPOL – Validación de VIN</h2>
-            <p><b>Estado:</b> {estado}</p>
-            <p>{detalle}</p>
-        </div>
-
-        {imagen_html}
-
-        <br><br>
-
-        <a href="/reporte/{vin}">
-            <button>📄 Generar Reporte Profesional</button>
-        </a>
-
-        <br><br>
-
-        <a href="/vin">Verificar otro VIN</a>
-
+    <div class="box">
+        <h2>VELPOL – Verificador de VIN</h2>
+        <p><b>VIN:</b> {vin}</p>
+        <p><b>País de origen:</b> {pais}</p>
+        <p><b>Fabricante:</b> {fabricante}</p>
+        <p><b>Año de fabricación:</b> {anio}</p>
     </div>
-    """
+
+    <div class="box">
+        <h2>VELPOL – Validación de VIN</h2>
+        <p><b>Estado:</b> {estado}</p>
+        <p>{detalle}</p>
+    </div>
+
+    {imagen_html}
+
+    <br><br>
+
+    <a href="/reporte/{vin}">
+        <button>📄 Generar Reporte Profesional</button>
+    </a>
+
+    <br><br>
+
+    <a href="/vin">Verificar otro VIN</a>
+
+</div>
+"""
 from fastapi.responses import FileResponse
 
 @app.get("/reporte/{vin}")
