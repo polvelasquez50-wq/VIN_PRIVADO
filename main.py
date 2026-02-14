@@ -123,7 +123,7 @@ def login():
     {BASE_STYLE}
     <div class="container">
         <img src="/static/logo.png" class="logo">
-        <h1>VELPOL – VERIFICADOR DE VIN</h1>
+        <h1>VELPOL – VIN System</h1>
         <form action="/login" method="post">
             <input type="password" name="password" placeholder="Contraseña de acceso">
             <button type="submit">Ingresar</button>
