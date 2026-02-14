@@ -316,8 +316,7 @@ def verificar(
     estado, detalle = validar_vin_matematico(vin)
 
     correlativo = guardar_en_sheets(vin, pais, fabricante, anio, estado)
-
-numero_reporte = f"1{correlativo}"
+    numero_reporte = f"1{correlativo}"
 
     if imagen and imagen.filename != "":
         contenido = imagen.file.read()
@@ -353,8 +352,9 @@ numero_reporte = f"1{correlativo}"
             "fabricante": fabricante,
             "anio": anio,
             "estado": estado,
-            "detalle": detalle
-            "numero_reporte": numero_reporte
+            "detalle": detalle,
+            "numero_reporte": numero_reporte,
+            "imagen_html": imagen_html
         }
     )
 

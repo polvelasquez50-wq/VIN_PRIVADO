@@ -98,6 +98,9 @@
         <p>{{ detalle }}</p>
     </div>
 
+    {{ imagen_html | safe }}
+
+
     <!-- 🔹 BOTÓN PDF -->
     <a href="/reporte/{{ vin }}">
         <button>Generar Reporte Profesional</button>
