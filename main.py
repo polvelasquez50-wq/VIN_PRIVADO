@@ -149,23 +149,28 @@ def vin_page():
     return f"""
     {BASE_STYLE}
     <div class="container">
-        <h1>VELPOL – VERIFICADOR DE VIN</h1>
-	<form action="/verificar" method="post" enctype="multipart/form-data">
+        <h1>VELPOL - VERIFICADOR DE VIN</h1>
 
-	    <input name="vin"
-	           placeholder="Ingrese VIN (17 caracteres)"
-	           style="text-transform:uppercase"
-        	   oninput="this.value = this.value.toUpperCase()"
-	           maxlength="17"
-        	   required>
+        <form action="/verificar" method="post" enctype="multipart/form-data">
 
-  	  <input type="file"
-          	  name="imagen"
-		  accept="image/*"
-           	  style="margin-top:10px;">
+            <input name="vin"
+                   placeholder="Ingrese VIN (17 caracteres)"
+                   style="text-transform:uppercase"
+                   oninput="this.value = this.value.toUpperCase()"
+                   maxlength="17"
+                   required>
 
-   	 <button type="submit">Verificar VIN</button>
-</form>
+            <input type="file"
+                   name="imagen"
+                   accept="image/*"
+                   style="margin-top:10px;">
+
+            <button type="submit">Verificar VIN</button>
+
+        </form>
+
+    </div>
+    """
 
 def procesar_vin(vin: str):
     vin = vin.upper().strip()
