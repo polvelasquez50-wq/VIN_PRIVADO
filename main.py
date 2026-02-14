@@ -329,40 +329,15 @@ def verificar(
     </div>
 </div>
 """
-
     return f"""
-{BASE_STYLE}
-<div class="container">
-    <h1>Resultado VIN</h1>
-
-    <div class="box">
-        <h2>VELPOL - Verificador de VIN</h2>
-        <p><b>VIN:</b> {vin}</p>
-        <p><b>País de origen:</b> {pais}</p>
-        <p><b>Fabricante:</b> {fabricante}</p>
-        <p><b>Año de fabricación:</b> {anio}</p>
-    </div>
-
-    <div class="box">
-        <h2>VELPOL - Validación de VIN</h2>
-        <p><b>Estado:</b> {estado}</p>
-        <p>{detalle}</p>
-    </div>
-
-    {imagen_html}
-
-    <br><br>
-
-    <a href="/reporte/{vin}">
-        <button>Generar Reporte Profesional</button>
-    </a>
-
-    <br><br>
-
-    <a href="/vin">Verificar otro VIN</a>
-
-</div>
+<html>
+<body>
+<h1>OK</h1>
+<p>VIN: {vin}</p>
+</body>
+</html>
 """
+
 from fastapi.responses import FileResponse
 
 @app.get("/reporte/{vin}")
