@@ -8,8 +8,12 @@ from google.oauth2.service_account import Credentials
 from datetime import datetime
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+from fastapi import Request
+from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
+
+templates = Jinja2Templates(directory="templates")
 
 with open("paises.json", encoding="utf-8") as f:
     PAISES = json.load(f)
@@ -289,6 +293,7 @@ def generar_reporte_pdf(vin, pais, fabricante, anio, estado):
 # Verificar VIN (VELPOL)
 @app.post("/verificar", response_class=HTMLResponse)
 def verificar(
+    request: Request,
     vin: str = Form(...),
     imagen: UploadFile = File(None)
 ):
@@ -334,14 +339,18 @@ def verificar(
     </div>
 </div>
 """
-    return f"""
-<html>
-<body>
-<h1>OK</h1>
-<p>VIN: {vin}</p>
-</body>
-</html>
-"""
+return templates.TemplateResponse(
+    "resultado.html",
+    {
+        "request": request,
+        "vin": vin,
+        "pais": pais,
+        "fabricante": fabricante,
+        "anio": anio,
+        "estado": estado,
+        "detalle": detalle
+    }
+)
 
 from fastapi.responses import FileResponse
 
