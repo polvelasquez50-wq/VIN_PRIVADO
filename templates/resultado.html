@@ -3,20 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <title>Resultado VIN</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #e5e7eb;
+            margin: 0;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .box {
+            background: #0b1120;
+            padding: 25px;
+            margin-top: 25px;
+            border-radius: 14px;
+            border: 2px solid #1e293b;
+            text-align: left;
+        }
+
+        h2 {
+            margin-top: 0;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 8px;
+        }
+
+        .ok {
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        .alert {
+            color: #f87171;
+            font-weight: bold;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        a {
+            color: #93c5fd;
+            text-decoration: none;
+        }
+    </style>
 </head>
-<body style="font-family: Arial; background:#0f172a; color:white; text-align:center; padding:40px;">
+<body>
+
+<div class="container">
 
     <h1>Resultado VIN</h1>
 
-    <p><b>VIN:</b> {{ vin }}</p>
-    <p><b>País:</b> {{ pais }}</p>
-    <p><b>Fabricante:</b> {{ fabricante }}</p>
-    <p><b>Año:</b> {{ anio }}</p>
-    <p><b>Estado:</b> {{ estado }}</p>
-    <p>{{ detalle }}</p>
+    <!-- 🔹 VERIFICACIÓN DE VIN -->
+    <div class="box">
+        <h2>Verificación de VIN</h2>
+        <p><b>VIN:</b> {{ vin }}</p>
+        <p><b>País:</b> {{ pais }}</p>
+        <p><b>Fabricante:</b> {{ fabricante }}</p>
+        <p><b>Año:</b> {{ anio }}</p>
+    </div>
 
-    <br>
-    <a href="/vin">Volver</a>
+    <!-- 🔹 VALIDACIÓN DE VIN -->
+    <div class="box">
+        <h2>Validación Matemática (ISO 3779)</h2>
+
+        {% if estado == "VÁLIDO" %}
+            <p class="ok">{{ estado }}</p>
+        {% else %}
+            <p class="alert">{{ estado }}</p>
+        {% endif %}
+
+        <p>{{ detalle }}</p>
+    </div>
+
+    <!-- 🔹 BOTÓN PDF -->
+    <a href="/reporte/{{ vin }}">
+        <button>Generar Reporte Profesional</button>
+    </a>
+
+    <br><br>
+    <a href="/vin">Verificar otro VIN</a>
+
+</div>
 
 </body>
 </html>
