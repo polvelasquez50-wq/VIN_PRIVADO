@@ -354,7 +354,7 @@ def verificar(
     <br><br>
 
     <a href="/reporte/{vin}">
-        <button>📄 Generar Reporte Profesional</button>
+        <button>Generar Reporte Profesional</button>
     </a>
 
     <br><br>
