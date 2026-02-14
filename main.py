@@ -260,6 +260,8 @@ def guardar_en_sheets(vin, pais, fabricante, anio, estado):
             estado
         ])
 
+        return correlativo
+
     except Exception as e:
         print("Error guardando en Google Sheets:", e)
 
@@ -313,7 +315,9 @@ def verificar(
     pais, fabricante, anio = procesar_vin(vin)
     estado, detalle = validar_vin_matematico(vin)
 
-    guardar_en_sheets(vin, pais, fabricante, anio, estado)
+    correlativo = guardar_en_sheets(vin, pais, fabricante, anio, estado)
+
+numero_reporte = f"1{correlativo}"
 
     if imagen and imagen.filename != "":
         contenido = imagen.file.read()
@@ -350,6 +354,7 @@ def verificar(
             "anio": anio,
             "estado": estado,
             "detalle": detalle
+            "numero_reporte": numero_reporte
         }
     )
 
