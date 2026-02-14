@@ -290,16 +290,15 @@ def verificar(
 
     vin = vin.upper().strip()
 
-    if len(vin) != 17:
-        return f"""
-        {BASE_STYLE}
-        <div class="container">
-            <h1>Resultado</h1>
-    return render_template("vin_page.html", error="VIN inválido (debe tener 17 caracteres)")
-            <a href="/vin">Intentar otro</a>
-        </div>
-        """
-
+   if len(vin) != 17:
+    return f"""
+    {BASE_STYLE}
+    <div class="container">
+        <h1>Resultado</h1>
+        <p><b>Error:</b> VIN inválido (debe tener 17 caracteres)</p>
+        <a href="/vin">Intentar otro</a>
+    </div>
+    """
     pais, fabricante, anio = procesar_vin(vin)
     estado, detalle = validar_vin_matematico(vin)
 
