@@ -336,7 +336,7 @@ def verificar(
     <h1>Resultado VIN</h1>
 
     <div class="box">
-        <h2>VELPOL – Verificador de VIN</h2>
+        <h2>VELPOL - Verificador de VIN</h2>
         <p><b>VIN:</b> {vin}</p>
         <p><b>País de origen:</b> {pais}</p>
         <p><b>Fabricante:</b> {fabricante}</p>
@@ -344,7 +344,7 @@ def verificar(
     </div>
 
     <div class="box">
-        <h2>VELPOL – Validación de VIN</h2>
+        <h2>VELPOL - Validación de VIN</h2>
         <p><b>Estado:</b> {estado}</p>
         <p>{detalle}</p>
     </div>
