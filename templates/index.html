@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>VIN Privado</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="contenedor">
+    <h1>Decodificador VIN</h1>
+
+<input 
+  type="text" 
+  id="vin" 
+  placeholder="Ingresa el VIN (17 caracteres)"
+  onkeypress="if(event.key === 'Enter') buscarVin();"
+>
+<button onclick="buscarVin()">Buscar</button>
+
+    <div id="resultado"></div>
+</div>
+
+<script>
+function buscarVin() {
+    const vin = document.getElementById("vin").value;
+    if (vin.length !== 17) {
+        alert("El VIN debe tener 17 caracteres");
+        return;
+    }
+
+    fetch(`/decode/${vin}`)
+        .then(res => res.json())
+        .then(data => {
+    if (!data.Make) {
+        document.getElementById("resultado").innerHTML =
+            "<p>No se encontró información para este VIN.</p>";
+        return;
+    }
+
+    document.getElementById("resultado").innerHTML = `
+        <p><b>Marca:</b> ${data.Make}</p>
+        <p><b>Modelo:</b> ${data.Model || "No disponible"}</p>
+        <p><b>Año:</b> ${data.ModelYear}</p>
+        <p><b>País:</b> ${data.Country}</p>
+        <p><b>Motor:</b> ${data.EngineCylinders || "No disponible"}</p>
+    `;
+});
+
+}
+</script>
+
+</body>
+</html>
