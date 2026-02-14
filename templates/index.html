@@ -2,51 +2,67 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>VIN Privado</title>
+    <title>VELPOL – VIN System</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
 <div class="contenedor">
-    <h1>Decodificador VIN</h1>
 
-<input 
-  type="text" 
-  id="vin" 
-  placeholder="Ingresa el VIN (17 caracteres)"
-  onkeypress="if(event.key === 'Enter') buscarVin();"
->
-<button onclick="buscarVin()">Buscar</button>
+    <h1 style="margin-bottom:5px;">VELPOL – VIN System</h1>
+    <h3 style="color:#94a3b8; margin-top:0;">
+        Certificación Profesional de VIN
+    </h3>
 
-    <div id="resultado"></div>
+    <hr style="margin:20px 0;">
+
+    <input 
+      type="text" 
+      id="vin" 
+      placeholder="Ingrese el VIN (17 caracteres)"
+      maxlength="17"
+      onkeypress="if(event.key === 'Enter') buscarVin();"
+    >
+
+    <button onclick="buscarVin()">Verificar VIN</button>
+
+    <div id="resultado" style="margin-top:25px;"></div>
+
 </div>
 
 <script>
 function buscarVin() {
-    const vin = document.getElementById("vin").value;
+    const vin = document.getElementById("vin").value.toUpperCase();
+
     if (vin.length !== 17) {
-        alert("El VIN debe tener 17 caracteres");
+        alert("El VIN debe tener exactamente 17 caracteres");
         return;
     }
 
     fetch(`/decode/${vin}`)
         .then(res => res.json())
         .then(data => {
-    if (!data.Make) {
-        document.getElementById("resultado").innerHTML =
-            "<p>No se encontró información para este VIN.</p>";
-        return;
-    }
 
-    document.getElementById("resultado").innerHTML = `
-        <p><b>Marca:</b> ${data.Make}</p>
-        <p><b>Modelo:</b> ${data.Model || "No disponible"}</p>
-        <p><b>Año:</b> ${data.ModelYear}</p>
-        <p><b>País:</b> ${data.Country}</p>
-        <p><b>Motor:</b> ${data.EngineCylinders || "No disponible"}</p>
-    `;
-});
+            if (!data.Make) {
+                document.getElementById("resultado").innerHTML =
+                    "<p>No se encontró información para este VIN.</p>";
+                return;
+            }
 
+            document.getElementById("resultado").innerHTML = `
+                <h3>Resultado de Decodificación</h3>
+                <p><b>VIN:</b> ${vin}</p>
+                <p><b>Marca:</b> ${data.Make}</p>
+                <p><b>Modelo:</b> ${data.Model || "No disponible"}</p>
+                <p><b>Año:</b> ${data.ModelYear}</p>
+                <p><b>País:</b> ${data.Country}</p>
+                <p><b>Motor:</b> ${data.EngineCylinders || "No disponible"}</p>
+                <br>
+                <a href="/reporte/${vin}" target="_blank">
+                    <button>Imprimir / Generar Reporte PDF</button>
+                </a>
+            `;
+        });
 }
 </script>
 
