@@ -328,7 +328,7 @@ def verificar(
     </div>
 </div>
 """
-    else:
+        else:
         imagen_html = """
 <div class="box">
     <h2>Imagen del vehículo</h2>
@@ -339,18 +339,19 @@ def verificar(
     </div>
 </div>
 """
-return templates.TemplateResponse(
-    "resultado.html",
-    {
-        "request": request,
-        "vin": vin,
-        "pais": pais,
-        "fabricante": fabricante,
-        "anio": anio,
-        "estado": estado,
-        "detalle": detalle
-    }
-)
+    return templates.TemplateResponse(
+        "resultado.html",
+        {
+            "request": request,
+            "vin": vin,
+            "pais": pais,
+            "fabricante": fabricante,
+            "anio": anio,
+            "estado": estado,
+            "detalle": detalle
+        }
+    )
+
 
 from fastapi.responses import FileResponse
 
