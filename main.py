@@ -288,6 +288,14 @@ def generar_reporte_pdf(
 
     fecha = datetime.now().strftime("%d/%m/%Y %H:%M")
 
+    numero_reporte = str(numero_reporte)
+    vin = str(vin)
+    pais = str(pais)
+    fabricante = str(fabricante)
+    anio = str(anio)
+    estado = str(estado)
+    detalle = str(detalle)
+
     c.setFont("Helvetica", 10)
 
     c.drawString(130, 735, str(numero_reporte))
