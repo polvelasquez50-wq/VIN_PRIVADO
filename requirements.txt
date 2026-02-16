@@ -5,3 +5,4 @@ gspread
 google-auth
 reportlab
 jinja2
+PyPDF2

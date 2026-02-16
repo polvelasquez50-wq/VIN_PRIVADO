@@ -265,32 +265,58 @@ def guardar_en_sheets(vin, pais, fabricante, anio, estado):
     except Exception as e:
         print("Error guardando en Google Sheets:", e)
 
-def generar_reporte_pdf(vin, pais, fabricante, anio, estado):
+from reportlab.lib.utils import ImageReader
 
-    nombre_archivo = f"reporte_{vin}.pdf"
-    ruta = f"/tmp/{nombre_archivo}"
+def generar_reporte_pdf(
+    numero_reporte,
+    vin,
+    pais,
+    fabricante,
+    anio,
+    estado,
+    detalle,
+    imagen_bytes=None
+):
 
-    c = canvas.Canvas(ruta, pagesize=letter)
+    packet = io.BytesIO()
+    c = canvas.Canvas(packet)
 
-    c.setFont("Helvetica-Bold", 16)
-    c.drawString(50, 750, "VELPOL – REPORTE DE VALIDACIÓN VIN")
+    fecha = datetime.now().strftime("%d/%m/%Y %H:%M")
 
-    c.setFont("Helvetica", 12)
+    c.setFont("Helvetica", 10)
 
-    fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    c.drawString(130, 735, str(numero_reporte))
+    c.drawString(420, 735, fecha)
 
-    c.drawString(50, 700, f"Fecha: {fecha}")
-    c.drawString(50, 680, f"VIN: {vin}")
-    c.drawString(50, 660, f"País: {pais}")
-    c.drawString(50, 640, f"Fabricante: {fabricante}")
-    c.drawString(50, 620, f"Año: {anio}")
-    c.drawString(50, 600, f"Estado: {estado}")
+    c.drawString(150, 630, vin)
+    c.drawString(150, 610, pais)
+    c.drawString(150, 590, fabricante)
+    c.drawString(150, 570, anio)
 
-    c.drawString(50, 550, "Reporte generado por el sistema VELPOL")
+    c.drawString(150, 520, estado)
+    c.drawString(150, 500, detalle)
+
+    if imagen_bytes:
+        img = ImageReader(io.BytesIO(imagen_bytes))
+        c.drawImage(img, 120, 330, width=350, height=150)
 
     c.save()
 
-    return ruta, nombre_archivo
+    packet.seek(0)
+    overlay = PdfReader(packet)
+
+    base_pdf = PdfReader("static/REPORTE_BASE.pdf")
+    writer = PdfWriter()
+
+    page = base_pdf.pages[0]
+    page.merge_page(overlay.pages[0])
+    writer.add_page(page)
+
+    output = io.BytesIO()
+    writer.write(output)
+    output.seek(0)
+
+    return output
 
 # Verificar VIN (VELPOL)
 @app.post("/verificar", response_class=HTMLResponse)
@@ -360,19 +386,28 @@ def verificar(
 
 from fastapi.responses import FileResponse
 
-@app.get("/reporte/{vin}")
-def descargar_reporte(vin: str):
+@app.get("/reporte/{vin}/{numero_reporte}")
+def descargar_reporte(vin: str, numero_reporte: str):
 
     pais, fabricante, anio = procesar_vin(vin)
     estado, detalle = validar_vin_matematico(vin)
 
-    ruta, nombre = generar_reporte_pdf(vin, pais, fabricante, anio, estado)
-
-    return FileResponse(
-        ruta,
-        media_type="application/pdf",
-        filename=nombre
+    pdf = generar_reporte_pdf(
+        numero_reporte,
+        vin,
+        pais,
+        fabricante,
+        anio,
+        estado,
+        detalle
     )
 
+    return StreamingResponse(
+        pdf,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f"attachment; filename=REPORTE_{vin}.pdf"
+        }
+    )
 
 
