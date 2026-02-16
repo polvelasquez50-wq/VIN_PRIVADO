@@ -1,15 +1,20 @@
-from fastapi import FastAPI, Form, File, UploadFile
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi import FastAPI, Form, File, UploadFile, Request
+from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+
 import json
 import os
+import io
 import gspread
+
 from google.oauth2.service_account import Credentials
 from datetime import datetime
+
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
-from fastapi import Request
-from fastapi.templating import Jinja2Templates
+
+from PyPDF2 import PdfReader, PdfWriter
 
 app = FastAPI()
 
