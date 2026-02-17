@@ -296,12 +296,16 @@ def generar_reporte_pdf(
     estado = str(estado)
     detalle = str(detalle)
 
-    c.setFont("Courier-Bold", 10)
+    c.setFont("Courier-Bold", 11)
 
-    c.drawString(160, 600, str(numero_reporte))
-    c.drawString(430, 600, fecha)
+    c.drawString(170, 610, str(numero_reporte))
+    c.drawString(440, 610, fecha)
 
-    c.drawString(200, 630, vin)
+    c.setFont("Courier-Bold", 13)
+
+    c.drawString(205, 595, vin)
+
+    c.setFont("Courier-Bold", 11)
 
     c.drawString(170, 530, vin)
     c.drawString(170, 510, pais)
