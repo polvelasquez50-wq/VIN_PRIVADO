@@ -77,14 +77,14 @@
     <div class="box">
         <h2>Verificación de VIN</h2>
         <p><b>VIN:</b> {{ vin }}</p>
-        <p><b>País:</b> {{ pais }}</p>
+        <p><b>País de Procedencia:</b> {{ pais }}</p>
         <p><b>Fabricante:</b> {{ fabricante }}</p>
         <p><b>Año:</b> {{ anio }}</p>
     </div>
 
     <!-- 🔹 VALIDACIÓN DE VIN -->
     <div class="box">
-        <h2>Validación Matemática (ISO 3779)</h2>
+        <h2>Validación de VIN (ISO 3779)</h2>
 
         {% if estado == "VÁLIDO" %}
             <p class="ok">{{ estado }}</p>
