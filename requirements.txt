@@ -6,3 +6,4 @@ google-auth
 reportlab
 jinja2
 PyPDF2
+google-api-python-client

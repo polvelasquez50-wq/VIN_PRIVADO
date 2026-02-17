@@ -9,12 +9,18 @@ import io
 import gspread
 
 from google.oauth2.service_account import Credentials
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseUpload
+
 from datetime import datetime
 
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
 from PyPDF2 import PdfReader, PdfWriter
+
+from reportlab.lib.utils import ImageReader
+from reportlab.lib import colors
 
 app = FastAPI()
 
@@ -270,6 +276,43 @@ def guardar_en_sheets(vin, pais, fabricante, anio, estado):
     except Exception as e:
         print("Error guardando en Google Sheets:", e)
 
+def subir_pdf_a_drive(pdf_buffer, nombre_archivo):
+
+    try:
+        creds_json = os.getenv("GOOGLE_CREDENTIALS")
+        if not creds_json:
+            return None
+
+        creds_dict = json.loads(creds_json)
+
+        credentials = Credentials.from_service_account_info(
+            creds_dict,
+            scopes=["https://www.googleapis.com/auth/drive"]
+        )
+
+        service = build("drive", "v3", credentials=credentials)
+
+        file_metadata = {
+            "name": nombre_archivo
+        }
+
+        media = MediaIoBaseUpload(
+            pdf_buffer,
+            mimetype="application/pdf"
+        )
+
+        file = service.files().create(
+            body=file_metadata,
+            media_body=media,
+            fields="id"
+        ).execute()
+
+        return file.get("id")
+
+    except Exception as e:
+        print("Error Drive:", e)
+        return None
+
 from reportlab.lib.utils import ImageReader
 
 def generar_reporte_pdf(
@@ -317,8 +360,19 @@ def generar_reporte_pdf(
     c.drawString(75, 385, detalle)
 
     if imagen_bytes:
-        img = ImageReader(io.BytesIO(imagen_bytes))
-        c.drawImage(img, 120, 330, width=350, height=150)
+        try:
+            img = ImageReader(io.BytesIO(imagen_bytes))
+            c.drawImage(img, 120, 330, width=350, height=150, preserveAspectRatio=True)
+        except Exception as e:
+            print("Error imagen:", e)
+    else:
+        c.saveState()
+        c.translate(300, 380)
+        c.rotate(30)
+        c.setFont("Courier-Bold", 32)
+        c.setFillColor(colors.grey)
+        c.drawCentredString(0, 0, "NO DATA")
+        c.restoreState()
 
     c.save()
 
@@ -401,16 +455,28 @@ def verificar(
             "detalle": detalle,
             "numero_reporte": numero_reporte,
             "imagen_html": imagen_html
+            "imagen_base64": imagen_base64 if imagen and imagen.filename != "" else None,
+
         }
     )
 
 from fastapi.responses import FileResponse
 
-@app.get("/reporte/{vin}/{numero_reporte}")
-def descargar_reporte(vin: str, numero_reporte: str):
+@app.post("/reporte")
+def descargar_reporte(
+    vin: str = Form(...),
+    numero_reporte: str = Form(...),
+    imagen_base64: str = Form(None)
+):
 
     pais, fabricante, anio = procesar_vin(vin)
     estado, detalle = validar_vin_matematico(vin)
+
+    # Convertir base64 nuevamente a bytes
+    imagen_bytes = None
+    if imagen_base64:
+        import base64
+        imagen_bytes = base64.b64decode(imagen_base64)
 
     pdf = generar_reporte_pdf(
         numero_reporte,
@@ -419,10 +485,15 @@ def descargar_reporte(vin: str, numero_reporte: str):
         fabricante,
         anio,
         estado,
-        detalle
+        detalle,
+        imagen_bytes
     )
 
     nombre_archivo = f"VELPOL_VINreport_{numero_reporte}_{vin}.pdf"
+
+    pdf.seek(0)
+    subir_pdf_a_drive(pdf, nombre_archivo)
+    pdf.seek(0)
 
     return StreamingResponse(
         pdf,
@@ -431,5 +502,4 @@ def descargar_reporte(vin: str, numero_reporte: str):
             "Content-Disposition": f"attachment; filename={nombre_archivo}"
         }
     )
-
 
