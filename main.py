@@ -362,7 +362,7 @@ def generar_reporte_pdf(
     if imagen_bytes:
         try:
             img = ImageReader(io.BytesIO(imagen_bytes))
-            c.drawImage(img, 120, 330, width=350, height=150, preserveAspectRatio=True)
+            c.drawImage(img, 230, 150, width=350, height=130, preserveAspectRatio=True)
         except Exception as e:
             print("Error imagen:", e)
     else:
