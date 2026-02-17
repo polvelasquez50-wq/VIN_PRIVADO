@@ -454,9 +454,8 @@ def verificar(
             "estado": estado,
             "detalle": detalle,
             "numero_reporte": numero_reporte,
-            "imagen_html": imagen_html
+            "imagen_html": imagen_html,
             "imagen_base64": imagen_base64 if imagen and imagen.filename != "" else None,
-
         }
     )
 
