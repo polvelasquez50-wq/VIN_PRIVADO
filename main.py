@@ -301,19 +301,19 @@ def generar_reporte_pdf(
     c.drawString(180, 620, str(numero_reporte))
     c.drawString(450, 620, fecha)
 
-    c.setFont("Courier-Bold", 15)
+    c.setFont("Courier-Bold", 20)
 
-    c.drawString(205, 590, vin)
+    c.drawString(210, 585, vin)
 
     c.setFont("Courier-Bold", 12)
 
     c.drawString(200, 525, vin)
     c.drawString(200, 509, pais)
-    c.drawString(200, 495, fabricante)
-    c.drawString(200, 480, anio)
+    c.drawString(200, 490, fabricante)
+    c.drawString(200, 475, anio)
 
     c.drawString(115, 415, vin)
-    c.drawString(115, 405, estado)
+    c.drawString(115, 398, estado)
     c.drawString(75, 385, detalle)
 
     if imagen_bytes:
@@ -422,11 +422,13 @@ def descargar_reporte(vin: str, numero_reporte: str):
         detalle
     )
 
+    nombre_archivo = f"VELPOL_VINreport_{numero_reporte}_{vin}.pdf"
+
     return StreamingResponse(
         pdf,
         media_type="application/pdf",
         headers={
-            "Content-Disposition": f"attachment; filename=REPORTE_{vin}.pdf"
+            "Content-Disposition": f"attachment; filename={nombre_archivo}"
         }
     )
 
