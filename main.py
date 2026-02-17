@@ -314,7 +314,7 @@ def generar_reporte_pdf(
 
     c.drawString(115, 415, vin)
     c.drawString(115, 405, estado)
-    c.drawString(70, 385, detalle)
+    c.drawString(75, 385, detalle)
 
     if imagen_bytes:
         img = ImageReader(io.BytesIO(imagen_bytes))
