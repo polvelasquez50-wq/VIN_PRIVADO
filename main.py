@@ -298,16 +298,19 @@ def generar_reporte_pdf(
 
     c.setFont("Courier-Bold", 10)
 
-    c.drawString(130, 635, str(numero_reporte))
-    c.drawString(420, 635, fecha)
+    c.drawString(160, 600, str(numero_reporte))
+    c.drawString(430, 600, fecha)
 
-    c.drawString(150, 530, vin)
-    c.drawString(150, 510, pais)
-    c.drawString(150, 490, fabricante)
-    c.drawString(150, 470, anio)
+    c.drawString(200, 630, vin)
 
-    c.drawString(150, 420, estado)
-    c.drawString(150, 400, detalle)
+    c.drawString(170, 530, vin)
+    c.drawString(170, 510, pais)
+    c.drawString(170, 490, fabricante)
+    c.drawString(170, 470, anio)
+
+    c.drawString(120, 420, vin)
+    c.drawString(120, 410, estado)
+    c.drawString(100, 400, detalle)
 
     if imagen_bytes:
         img = ImageReader(io.BytesIO(imagen_bytes))
