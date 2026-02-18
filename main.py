@@ -293,7 +293,8 @@ def subir_pdf_a_drive(pdf_buffer, nombre_archivo):
         service = build("drive", "v3", credentials=credentials)
 
         file_metadata = {
-            "name": nombre_archivo
+            "name": nombre_archivo,
+            "parents": ["13DHXYTtE7YjrAMX1d2MZ7XV5nYHvvOKH"]
         }
 
         media = MediaIoBaseUpload(
@@ -384,9 +385,11 @@ def generar_reporte_pdf(
             img_y = y - (new_height - frame_height) / 2
 
             c.saveState()
-            c.rect(x, y, frame_width, frame_height, stroke=0, fill=0)
-            c.clipPath()
- 
+
+            path = c.beginPath()
+            path.rect(x, y, frame_width, frame_height)
+            c.clipPath(path, stroke=0, fill=0)
+
             c.drawImage(
                 img,
                 img_x,
