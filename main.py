@@ -383,6 +383,10 @@ def generar_reporte_pdf(
             img_x = x - (new_width - frame_width) / 2
             img_y = y - (new_height - frame_height) / 2
 
+            c.saveState()
+            c.rect(x, y, frame_width, frame_height, stroke=0, fill=0)
+            c.clipPath()
+ 
             c.drawImage(
                 img,
                 img_x,
@@ -391,6 +395,8 @@ def generar_reporte_pdf(
                 height=new_height,
                 mask='auto'
             )
+
+            c.restoreState()
 
         except Exception as e:
             print("Error imagen:", e)
