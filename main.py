@@ -365,11 +365,11 @@ def generar_reporte_pdf(
             img = ImageReader(io.BytesIO(imagen_bytes))
             img_width, img_height = img.getSize()
 
-            frame_width = 350
-            frame_height = 130
+            frame_width = 300
+            frame_height = 120
 
-            x = 210
-            y = 165
+            x = 220
+            y = 175
 
             img_ratio = img_width / img_height
             frame_ratio = frame_width / frame_height
