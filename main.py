@@ -362,9 +362,44 @@ def generar_reporte_pdf(
     if imagen_bytes:
         try:
             img = ImageReader(io.BytesIO(imagen_bytes))
-            c.drawImage(img, 210, 165, width=350, height=130, preserveAspectRatio=True)
-        except Exception as e:
-            print("Error imagen:", e)
+            img_width, img_height = img.getSize()
+
+            # Marco fijo como en tu HTML
+            frame_width = 350
+            frame_height = 130
+
+           # Posición del marco (ajústalo si quieres moverlo)
+           x = 210
+           y = 165
+
+           img_ratio = img_width / img_height
+           frame_ratio = frame_width / frame_height
+
+           if img_ratio > frame_ratio:
+               # Imagen más horizontal
+               new_height = frame_height
+               new_width = frame_height * img_ratio
+           else:
+               # Imagen más vertical
+               new_width = frame_width
+               new_height = frame_width / img_ratio
+
+           # Centrar dentro del marco (efecto object-fit: cover)
+           img_x = x - (new_width - frame_width) / 2
+           img_y = y - (new_height - frame_height) / 2
+
+           c.drawImage(
+               img,
+               img_x,
+               img_y,
+               width=new_width,
+               height=new_height,
+               mask='auto'
+           )
+
+    except Exception as e:
+        print("Error imagen:", e)
+
     else:
         c.saveState()
         c.translate(300, 380)
