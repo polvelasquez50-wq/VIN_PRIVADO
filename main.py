@@ -230,7 +230,13 @@ def validar_vin_matematico(vin: str):
     digito_esperado = "X" if residuo == 10 else str(residuo)
 
     if vin[8] != digito_esperado:
-        return "SOSPECHOSO", "El dígito de control no coincide"
+        mensaje = (
+            "⚠ Se detectó una inconsistencia en el dígito verificador según el estándar ISO 3779.\n\n"
+            "Nota: Algunos vehículos de origen asiático pueden no aplicar estrictamente este estándar, "
+            "por lo que el presente resultado es referencial y no constituye evidencia de adulteración.\n\n"
+            "Se recomienda verificación física y documental del vehículo."
+        )
+        return "SOSPECHOSO", mensaje
 
     return "VÁLIDO", "Dígito de control correcto (ISO 3779)"
 
@@ -357,7 +363,7 @@ def generar_reporte_pdf(
     c.drawString(200, 493, fabricante)
     c.drawString(200, 477, anio)
 
-    c.drawString(115, 416, vin)
+    c.drawString(115, 418, vin)
 
     if estado == "VÁLIDO":
         c.setFillColor(colors.green)
@@ -368,11 +374,29 @@ def generar_reporte_pdf(
     else:
         c.setFillColor(colors.black)
 
-    c.drawString(115, 398, estado)
+    c.drawString(115, 402, estado)
 
     c.setFillColor(colors.black)
 
-    c.drawString(60, 385, detalle)
+    if estado == "SOSPECHOSO":
+
+        style = ParagraphStyle(
+            name="NormalStyle",
+            fontName="Courier",
+            fontSize=9,
+            leading=12
+        )
+
+        p = Paragraph(detalle.replace("\n", "<br/>"), style)
+
+        ancho_maximo = 460   # ancho dentro del margen
+        alto_maximo = 80     # espacio vertical disponible
+
+        w, h = p.wrap(ancho_maximo, alto_maximo)
+        p.drawOn(c, 75, 385 - h)
+
+    else:
+        c.drawString(80, 385, detalle)
 
     if imagen_bytes:
         try:
