@@ -13,6 +13,7 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
 
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -256,7 +257,7 @@ def guardar_en_sheets(vin, pais, fabricante, anio, estado):
 
         sheet = client.open("VELPOL_REGISTRO_VIN").sheet1
 
-        ahora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        ahora = datetime.now(ZoneInfo("America/Lima")).strftime("%Y-%m-%d %H:%M:%S")
 
         registros = sheet.get_all_values()
         correlativo = len(registros) + 1
@@ -330,7 +331,7 @@ def generar_reporte_pdf(
     packet = io.BytesIO()
     c = canvas.Canvas(packet)
 
-    fecha = datetime.now().strftime("%d/%m/%Y %H:%M")
+    fecha = datetime.now(ZoneInfo("America/Lima")).strftime("%d/%m/%Y %H:%M")
 
     numero_reporte = str(numero_reporte)
     vin = str(vin)
