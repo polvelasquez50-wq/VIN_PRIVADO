@@ -22,6 +22,8 @@ from PyPDF2 import PdfReader, PdfWriter
 
 from reportlab.lib.utils import ImageReader
 from reportlab.lib import colors
+from reportlab.platypus import Paragraph
+from reportlab.lib.styles import ParagraphStyle
 
 app = FastAPI()
 
