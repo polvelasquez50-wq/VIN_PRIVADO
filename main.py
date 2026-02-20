@@ -386,7 +386,7 @@ def generar_reporte_pdf(
             name="NormalStyle",
             fontName="Courier",
             fontSize=9,
-            leading=10
+            leading=10,
             spaceBefore=0,
             spaceAfter=0,
         )
