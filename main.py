@@ -358,18 +358,18 @@ def generar_reporte_pdf(
 
     c.drawString(115, 416, vin)
 
-if estado == "VÁLIDO":
-    c.setFillColor(colors.green)
-elif estado == "INVÁLIDO":
-    c.setFillColor(colors.red)
-elif estado == "SOSPECHOSO":
-    c.setFillColor(colors.orange)
-else:
+    if estado == "VÁLIDO":
+        c.setFillColor(colors.green)
+    elif estado == "INVÁLIDO":
+        c.setFillColor(colors.red)
+    elif estado == "SOSPECHOSO":
+        c.setFillColor(colors.orange)
+    else:
+        c.setFillColor(colors.black)
+
+    c.drawString(115, 398, estado)
+
     c.setFillColor(colors.black)
-
-c.drawString(115, 398, estado)
-
-c.setFillColor(colors.black)
 
     c.drawString(60, 385, detalle)
 
