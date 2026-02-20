@@ -234,9 +234,8 @@ def validar_vin_matematico(vin: str):
     if vin[8] != digito_esperado:
         mensaje = (
             "⚠ Se detectó una inconsistencia en el dígito verificador según el estándar ISO 3779.\n\n"
-            "Nota: Algunos vehículos de origen asiático pueden no aplicar estrictamente este estándar, "
-            "por lo que el presente resultado es referencial y no constituye evidencia de adulteración.\n\n"
-            "Se recomienda verificación física y documental del vehículo."
+            "Nota: Algunos vehículos de origen asiático no aplican la norma ISO 3779, por lo que el presente"
+            "resultado es referencial y no es necesariamente una adulteración. Se recomienda verificación física y documental del vehículo."
         )
         return "SOSPECHOSO", mensaje
 
