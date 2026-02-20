@@ -375,7 +375,7 @@ def generar_reporte_pdf(
     else:
         c.setFillColor(colors.black)
 
-    c.drawString(115, 400, estado)
+    c.drawString(115, 399, estado)
 
     c.setFillColor(colors.black)
 
