@@ -353,12 +353,12 @@ def generar_reporte_pdf(
 
     c.drawString(200, 525, vin)
     c.drawString(200, 509, pais)
-    c.drawString(200, 490, fabricante)
-    c.drawString(200, 475, anio)
+    c.drawString(200, 485, fabricante)
+    c.drawString(200, 478, anio)
 
-    c.drawString(115, 415, vin)
-    c.drawString(115, 398, estado)
-    c.drawString(75, 385, detalle)
+    c.drawString(115, 420, vin)
+    c.drawString(115, 403, estado)
+    c.drawString(50, 385, detalle)
 
     if imagen_bytes:
         try:
@@ -368,8 +368,8 @@ def generar_reporte_pdf(
             frame_width = 300
             frame_height = 120
 
-            x = 220
-            y = 175
+            x = 230
+            y = 185
 
             img_ratio = img_width / img_height
             frame_ratio = frame_width / frame_height
