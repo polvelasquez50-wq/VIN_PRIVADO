@@ -365,7 +365,7 @@ def generar_reporte_pdf(
     c.drawString(200, 493, fabricante)
     c.drawString(200, 477, anio)
 
-    c.drawString(115, 418, vin)
+    c.drawString(115, 416, vin)
 
     if estado == "VÁLIDO":
         c.setFillColor(colors.green)
@@ -376,7 +376,7 @@ def generar_reporte_pdf(
     else:
         c.setFillColor(colors.black)
 
-    c.drawString(115, 402, estado)
+    c.drawString(115, 400, estado)
 
     c.setFillColor(colors.black)
 
@@ -386,7 +386,9 @@ def generar_reporte_pdf(
             name="NormalStyle",
             fontName="Courier",
             fontSize=9,
-            leading=12
+            leading=10
+            spaceBefore=0,
+            spaceAfter=0,
         )
 
         p = Paragraph(detalle.replace("\n", "<br/>"), style)
