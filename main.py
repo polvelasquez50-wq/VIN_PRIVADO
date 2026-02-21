@@ -558,10 +558,15 @@ def descargar_reporte(
 
     # Convertir base64 nuevamente a bytes
     imagen_bytes = None
-    if imagen_base64:
+
+    if imagen_base64 and "base64," in imagen_base64:
         try:
             import base64
+
+            imagen_base64 = imagen_base64.split("base64,")[1]
+
             imagen_bytes = base64.b64decode(imagen_base64)
+
         except Exception as e:
             print("Error base64:", e)
             imagen_bytes = None
