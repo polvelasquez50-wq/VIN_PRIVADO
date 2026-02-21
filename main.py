@@ -591,5 +591,7 @@ def descargar_reporte(
     return StreamingResponse(
         pdf,
         media_type="application/pdf",
+        headers={
+            "Content-Disposition": f"attachment; filename={nombre_archivo}"
+        }
     )
-
