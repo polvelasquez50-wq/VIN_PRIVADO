@@ -543,17 +543,6 @@ def verificar(
 from fastapi.responses import FileResponse
 import tempfile
 
-# Crear archivo temporal
-temp = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
-temp.write(pdf.getvalue())
-temp.close()
-
-    return FileResponse(
-        temp.name,
-        media_type="application/pdf",
-        filename=nombre_archivo
-    )
-
 @app.api_route("/reporte", methods=["GET", "POST"])
 def descargar_reporte(
     request: Request,
@@ -600,10 +589,13 @@ def descargar_reporte(
     subir_pdf_a_drive(pdf, nombre_archivo)
     pdf.seek(0)
 
-    return StreamingResponse(
-        pdf,
+
+    temp = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
+    temp.write(pdf.read())
+    temp.close()
+
+    return FileResponse(
+        temp.name,
         media_type="application/pdf",
-        headers={
-            "Content-Disposition": f"attachment; filename={nombre_archivo}"
-        }
+        filename=nombre_archivo
     )
