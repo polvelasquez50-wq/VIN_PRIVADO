@@ -234,7 +234,7 @@ def validar_vin_matematico(vin: str):
     if vin[8] != digito_esperado:
         mensaje = (
             "⚠ Se detectó una inconsistencia en el dígito verificador según el estándar ISO 3779.\n\n"
-            "Nota: Algunos vehículos de origen asiático no aplican la norma ISO 3779, por lo que el presente"
+            "Nota: Algunos vehículos de origen asiático no aplican la norma ISO 3779, por lo que el presente "
             "resultado es referencial y no es necesariamente una adulteración. Se recomienda verificación física y documental del vehículo."
         )
         return "SOSPECHOSO", mensaje
@@ -314,6 +314,7 @@ def subir_pdf_a_drive(pdf_buffer, nombre_archivo):
             body=file_metadata,
             media_body=media,
             fields="id"
+            supportsAllDrives=True
         ).execute()
 
         return file.get("id")
@@ -541,12 +542,16 @@ def verificar(
 
 from fastapi.responses import FileResponse
 
-@app.post("/reporte")
+@app.api_route("/reporte", methods=["GET", "POST"])
 def descargar_reporte(
-    vin: str = Form(...),
-    numero_reporte: str = Form(...),
+    request: Request,
+    vin: str = Form(None),
+    numero_reporte: str = Form(None),
     imagen_base64: str = Form(None)
 ):
+
+if request.method == "GET":
+    return HTMLResponse("Método GET no permitido directamente")
 
     pais, fabricante, anio = procesar_vin(vin)
     estado, detalle = validar_vin_matematico(vin)
