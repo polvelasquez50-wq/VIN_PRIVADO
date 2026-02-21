@@ -541,6 +541,18 @@ def verificar(
     )
 
 from fastapi.responses import FileResponse
+import tempfile
+
+# Crear archivo temporal
+temp = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
+temp.write(pdf.getvalue())
+temp.close()
+
+return FileResponse(
+    temp.name,
+    media_type="application/pdf",
+    filename=nombre_archivo
+)
 
 @app.api_route("/reporte", methods=["GET", "POST"])
 def descargar_reporte(
