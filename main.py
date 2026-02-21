@@ -551,7 +551,7 @@ def descargar_reporte(
 ):
 
     if request.method == "GET":
-        return HTMLResponse("Método GET no permitido directamente")
+        raise HTTPException(status_code=405, detail="Método no permitido")
 
     pais, fabricante, anio = procesar_vin(vin)
     estado, detalle = validar_vin_matematico(vin)
@@ -559,8 +559,12 @@ def descargar_reporte(
     # Convertir base64 nuevamente a bytes
     imagen_bytes = None
     if imagen_base64:
-        import base64
-        imagen_bytes = base64.b64decode(imagen_base64)
+        try:
+            import base64
+            imagen_bytes = base64.b64decode(imagen_base64)
+        except Exception as e:
+            print("Error base64:", e)
+            imagen_bytes = None
 
     pdf = generar_reporte_pdf(
         numero_reporte,
