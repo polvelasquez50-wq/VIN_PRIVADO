@@ -550,8 +550,8 @@ def descargar_reporte(
     imagen_base64: str = Form(None)
 ):
 
-if request.method == "GET":
-    return HTMLResponse("Método GET no permitido directamente")
+    if request.method == "GET":
+        return HTMLResponse("Método GET no permitido directamente")
 
     pais, fabricante, anio = procesar_vin(vin)
     estado, detalle = validar_vin_matematico(vin)
