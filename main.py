@@ -447,12 +447,26 @@ def generar_reporte_pdf(
             print("Error imagen:", e)
 
     else:
+        frame_width = 300
+        frame_height = 125
+        x = 230
+        y = 180
+
         c.saveState()
-        c.translate(300, 380)
-        c.rotate(30)
+
+        # Dibujar borde del marco (opcional)
+        c.setStrokeColor(colors.grey)
+        c.rect(x, y, frame_width, frame_height, stroke=1, fill=0)
+
+        # Centrar texto dentro del marco
         c.setFont("Courier-Bold", 32)
         c.setFillColor(colors.grey)
-        c.drawCentredString(0, 0, "NO DATA")
+
+        centro_x = x + frame_width / 2
+        centro_y = y + frame_height / 2
+
+        c.drawCentredString(centro_x, centro_y - 10, "NO DATA")
+
         c.restoreState()
 
     c.save()
