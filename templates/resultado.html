@@ -97,15 +97,13 @@
 
     {{ imagen_html | safe }}
 
-
 <!-- 🔹 BOTÓN PDF -->
-<a href="/reporte?vin={{ vin }}&numero_reporte={{ numero_reporte }}&imagen_base64={{ imagen_base64 }}">
-    <button type="button">Generar Reporte Básico</button>
-</a>
-
-    <br><br>
-    <a href="/vin">Verificar otro VIN</a>
-
+<form action="/reporte" method="post">
+    <input type="hidden" name="vin" value="{{ vin }}">
+    <input type="hidden" name="numero_reporte" value="{{ numero_reporte }}">
+    <input type="hidden" name="imagen_base64" value="{{ imagen_base64 }}">
+    <button type="submit">Generar Reporte Básico</button>
+</form>
 </div>
 
 </body>

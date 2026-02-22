@@ -557,39 +557,24 @@ def verificar(
 from fastapi.responses import FileResponse
 import tempfile
 
-@app.api_route("/reporte", methods=["GET", "POST"])
-def descargar_reporte(
-    request: Request,
-    vin: str = Form(None),
-    numero_reporte: str = Form(None),
+@app.post("/reporte")
+def generar_reporte(
+    vin: str = Form(...),
+    numero_reporte: str = Form(...),
     imagen_base64: str = Form(None)
 ):
-
-    if request.method == "GET":
-        vin = request.query_params.get("vin")
-        numero_reporte = request.query_params.get("numero_reporte")
-        imagen_base64 = request.query_params.get("imagen_base64")
-
-        if not vin or not numero_reporte:
-            raise HTTPException(status_code=400, detail="Faltan parámetros")
 
     pais, fabricante, anio = procesar_vin(vin)
     estado, detalle = validar_vin_matematico(vin)
 
-    # Convertir base64 nuevamente a bytes
     imagen_bytes = None
 
-    if imagen_base64 and "base64," in imagen_base64:
+    if imagen_base64:
         try:
             import base64
-
-            imagen_base64 = imagen_base64.split("base64,")[1]
-
             imagen_bytes = base64.b64decode(imagen_base64)
-
         except Exception as e:
             print("Error base64:", e)
-            imagen_bytes = None
 
     pdf = generar_reporte_pdf(
         numero_reporte,
@@ -604,17 +589,29 @@ def descargar_reporte(
 
     nombre_archivo = f"VELPOL_VINreport_{numero_reporte}_{vin}.pdf"
 
+    ruta_temp = f"/tmp/{nombre_archivo}"
+
+    with open(ruta_temp, "wb") as f:
+        f.write(pdf.read())
+
     pdf.seek(0)
     subir_pdf_a_drive(pdf, nombre_archivo)
-    pdf.seek(0)
 
+    return RedirectResponse(
+        url=f"/descargar/{nombre_archivo}",
+        status_code=303
+    )
 
-    temp = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
-    temp.write(pdf.read())
-    temp.close()
+@app.get("/descargar/{nombre_archivo}")
+def descargar(nombre_archivo: str):
+
+    ruta_temp = f"/tmp/{nombre_archivo}"
+
+    if not os.path.exists(ruta_temp):
+        raise HTTPException(status_code=404, detail="Archivo no encontrado")
 
     return FileResponse(
-        temp.name,
+        ruta_temp,
         media_type="application/pdf",
         filename=nombre_archivo
     )
