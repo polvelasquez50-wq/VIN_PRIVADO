@@ -552,7 +552,12 @@ def descargar_reporte(
 ):
 
     if request.method == "GET":
-        raise HTTPException(status_code=405, detail="Método no permitido")
+        vin = request.query_params.get("vin")
+        numero_reporte = request.query_params.get("numero_reporte")
+        imagen_base64 = request.query_params.get("imagen_base64")
+
+        if not vin or not numero_reporte:
+            raise HTTPException(status_code=400, detail="Faltan parámetros")
 
     pais, fabricante, anio = procesar_vin(vin)
     estado, detalle = validar_vin_matematico(vin)
